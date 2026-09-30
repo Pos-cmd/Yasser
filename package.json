@@ -6,7 +6,9 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "preview": "nuxt preview",
+    "covers": "node scripts/resolve-covers.mjs",
+    "bookmarks": "node scripts/resolve-bookmarks.mjs"
   },
   "dependencies": {
     "@nuxt/content": "^3.16.0",

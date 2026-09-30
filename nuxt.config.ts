@@ -57,6 +57,11 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
+  // Alimente par NUXT_TMDB_API_KEY dans .env (jamais commite).
+  // Sert uniquement au resolveur de couvertures cote serveur.
+  runtimeConfig: {
+    tmdbApiKey: ''
+  },
   compatibilityDate: '2024-04-03',
   ui: {
     theme: {
