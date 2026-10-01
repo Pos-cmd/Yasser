@@ -46,7 +46,7 @@ const isActive = (item: NavItem) =>
 </script>
 
 <template>
-  <div class="flex space-x-4 min-h-screen bg-inherit bg-[repeating-linear-gradient(135deg,transparent_0,transparent_3px,var(--ui-border)_5px,var(--ui-border)_1px)]">
+  <div class="flex space-x-4 min-h-screen bg-[repeating-linear-gradient(135deg,transparent_0,transparent_3px,var(--ui-border)_5px,var(--ui-border)_1px)]">
     <USidebar
       v-model:open="sidebarOpen"
       :ui="{
@@ -118,12 +118,9 @@ const isActive = (item: NavItem) =>
       <!-- Identity -->
       <section class="space-y-3">
         <div class="flex items-center gap-3">
-          <NuxtImg
-            src="/image.png"
-            alt="Portrait of Yasser"
-            width="80"
-            height="80"
-            class="size-20 shrink-0 rounded-lg object-cover ring-1 ring-default"
+          <ProfileMascot
+            class="[--mascot-size:5rem] shrink-0 rounded-lg"
+            :source-width="540"
           />
         </div>
 
