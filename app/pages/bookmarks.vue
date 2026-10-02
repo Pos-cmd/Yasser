@@ -11,8 +11,12 @@ interface BookmarkLink {
   site?: string
 }
 
-const { data: doc } = await useAsyncData('page-bookmarks', () =>
-  queryCollection('pages').path('/bookmarks').first()
+const { contentPath } = useContentLocale()
+const { monthYear } = useDateFormat()
+
+const { data: doc } = await useAsyncData(
+  () => `page-bookmarks-${contentPath.value}`,
+  () => queryCollection('pages').path(contentPath.value).first()
 )
 
 if (!doc.value) {
@@ -24,8 +28,6 @@ const groups = computed(() => doc.value?.groups ?? [])
 // Ces types ont un intitule qui se suffit a lui-meme : afficher le titre
 // Open Graph ferait doublon et une miniature n'apporterait rien.
 const TEXT_ONLY = new Set(['docs', 'tool', 'repo'])
-
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 function hostname(url: string) {
   try {
@@ -52,11 +54,6 @@ function previewTitle(link: BookmarkLink) {
   if (link.title.toLowerCase().includes(link.label.toLowerCase())) return null
 
   return link.title
-}
-
-function formatDate(value: Date | string) {
-  const date = new Date(value)
-  return `${MONTHS[date.getUTCMonth()]} ${date.getUTCFullYear()}`
 }
 </script>
 
@@ -115,7 +112,7 @@ function formatDate(value: Date | string) {
                 <span class="mt-1 block truncate font-mono text-[11px] text-dimmed">
                   {{ hostname(link.url) }}
                   <template v-if="previewTitle(link)"> · {{ previewTitle(link) }}</template>
-                  <template v-if="link.date"> · {{ formatDate(link.date) }}</template>
+                  <template v-if="link.date"> · {{ monthYear(link.date) }}</template>
                 </span>
 
                 <span v-if="link.note" class="mt-2 block text-sm text-muted">

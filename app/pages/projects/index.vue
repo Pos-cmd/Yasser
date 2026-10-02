@@ -1,9 +1,14 @@
 <script setup lang="ts">
+const { t } = useI18n()
+const { inLocale, localeHref } = useContentLocale()
+
 const { data } = await useAsyncData('projects-list', () =>
   queryCollection('projects').order('order', 'ASC').all()
 )
 
-const projects = computed(() => data.value ?? [])
+// La collection contient les deux langues a plat : on ne garde que la locale
+// active.
+const projects = computed(() => (data.value ?? []).filter(project => inLocale(project.path)))
 
 // Placeholder tant qu'il n'y a pas de capture : la grille reste presentable
 // et chaque projet a sa propre teinte, la meme que sa banniere de page.
@@ -20,17 +25,17 @@ function placeholderStyle(seed: string) {
   <div>
     <header>
       <h1 class="text-3xl text-highlighted sm:text-4xl">
-        Projects
+        {{ t('projects.title') }}
       </h1>
       <p class="mt-3 text-muted">
-        Things I've built, mostly for myself, occasionally for other people.
+        {{ t('projects.description') }}
       </p>
     </header>
 
     <ul class="mt-12 grid gap-4 sm:grid-cols-2">
       <li v-for="project in projects" :key="project.path">
         <NuxtLink
-          :to="project.path"
+          :to="localeHref(project.path)"
           class="group flex h-full flex-col overflow-hidden border border-dashed border-default"
         >
           <!-- Visuel : capture si elle existe, sinon placeholder derive de la hue -->
@@ -38,7 +43,7 @@ function placeholderStyle(seed: string) {
             <img
               v-if="project.cover"
               :src="project.cover"
-              :alt="`Aperçu de ${project.title}`"
+              :alt="t('projects.previewAlt', { title: project.title })"
               loading="lazy"
               decoding="async"
               class="size-full object-cover transition-transform duration-500 group-hover:scale-105"

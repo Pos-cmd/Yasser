@@ -1,38 +1,36 @@
 <script setup lang="ts">
-const { data: entries } = await useAsyncData('experience-list', () =>
+const { t } = useI18n()
+const { inLocale, localeHref } = useContentLocale()
+const { monthYear } = useDateFormat()
+
+// La collection contient les deux langues a plat : on ne garde que la locale
+// active. Le filtrage est fait cote rendu, la requete reste simple.
+const { data } = await useAsyncData('experience-list', () =>
   queryCollection('experience').order('order', 'ASC').all()
 )
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
-// Formatage manuel plutot que toLocaleDateString : le rendu serveur et le rendu
-// client doivent produire exactement la meme chaine, sinon hydration mismatch.
-function formatDate(value?: Date | string | null) {
-  if (!value) return 'Present'
-  const date = new Date(value)
-  return `${MONTHS[date.getUTCMonth()]} ${date.getUTCFullYear()}`
-}
+const entries = computed(() => (data.value ?? []).filter(entry => inLocale(entry.path)))
 </script>
 
 <template>
   <div>
     <header>
       <h1 class="text-3xl text-highlighted sm:text-4xl">
-        Experience
+        {{ t('experience.title') }}
       </h1>
       <p class="mt-3 text-muted">
-        Where I've worked, what I was responsible for, and what I took away from it.
+        {{ t('experience.description') }}
       </p>
     </header>
 
     <ol class="mt-12">
       <li v-for="entry in entries" :key="entry.path">
         <NuxtLink
-          :to="entry.path"
+          :to="localeHref(entry.path)"
           class="group block border-b border-dashed border-default py-6"
         >
           <p class="font-mono text-xs text-dimmed">
-            {{ formatDate(entry.start) }} — {{ formatDate(entry.end) }}
+            {{ monthYear(entry.start) }} — {{ monthYear(entry.end) }}
           </p>
 
           <h2 class="mt-2 text-xl text-highlighted transition-colors group-hover:text-primary">

@@ -3,22 +3,23 @@ import type { NavItem } from '~/types/nav';
 
 const { items } = defineProps<{ items: NavItem[] }>()
 
-const route = useRoute()
+const { t } = useI18n()
+const { basePath, localeHref } = useContentLocale()
 
 const isActive = (item: NavItem) =>
-  route.path === item.to || route.path.startsWith(`${item.to}/`)
+  basePath.value === item.to || basePath.value.startsWith(`${item.to}/`)
 </script>
 
 <template>
   <nav
-    aria-label="Navigation des sections"
+    :aria-label="t('aria.sectionNav')"
     class="fixed right-0 top-1/2 z-10 hidden -translate-y-1/2
            flex-col items-end lg:flex"
   >
     <NuxtLink
       v-for="item in items"
       :key="item.to"
-      :to="item.to"
+      :to="localeHref(item.to)"
       :aria-current="isActive(item) ? 'page' : undefined"
       class="group relative flex w-full cursor-pointer items-center justify-end gap-3
              py-1 pl-2 pr-3 outline-none

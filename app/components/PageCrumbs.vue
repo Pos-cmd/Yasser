@@ -1,18 +1,32 @@
 <script setup lang="ts">
 const emit = defineEmits<{ openMenu: [] }>()
 
-const route = useRoute()
+const { t, te } = useI18n()
+const { basePath, localeHref } = useContentLocale()
+
+// Repli lisible pour un segment sans entree dans `crumbs` : `manga-shelf`
+// devient `manga shelf`.
+function formatSegment(segment: string) {
+  return segment.replace(/-/g, ' ')
+}
 
 // Chaque segment du chemin devient un lien, sauf le dernier qui represente
 // la page courante. C'est ce qui permet de remonter d'un cran (ou de revenir
 // a l'accueil) sans passer par la sidebar.
+//
+// On itere sur le chemin prive de son prefixe de locale, et les liens restent
+// ecrits en clair (`/experience`) : i18n ajoute le prefixe au rendu.
 const crumbs = computed(() => {
-  const segments = route.path.split('/').filter(Boolean)
+  const segments = basePath.value.split('/').filter(Boolean)
 
-  return segments.map((segment, index) => ({
-    label: segment.replace(/-/g, ' '),
-    to: '/' + segments.slice(0, index + 1).join('/')
-  }))
+  return segments.map((segment, index) => {
+    const key = `crumbs.${segment}`
+
+    return {
+      label: te(key) ? t(key) : formatSegment(segment),
+      to: '/' + segments.slice(0, index + 1).join('/')
+    }
+  })
 })
 </script>
 
@@ -32,7 +46,7 @@ const crumbs = computed(() => {
     au repos, pour conserver exactement le rendu precedent.
   -->
   <nav
-    aria-label="Fil d'Ariane"
+    :aria-label="t('aria.breadcrumb')"
     class="sticky top-0 z-20 -mt-9 flex h-9 items-center gap-2 overflow-x-auto
            border-t border-dashed border-default
            bg-white/80 px-6 backdrop-blur-sm sm:px-10 dark:bg-neutral-950/75"
@@ -41,7 +55,7 @@ const crumbs = computed(() => {
          elle sert d'en-tete sous lg sans ajouter d'element flottant. -->
     <button
       type="button"
-      aria-label="Ouvrir le menu"
+      :aria-label="t('aria.openMenu')"
       class="-ml-1 flex size-6 shrink-0 items-center justify-center text-neutral-900 transition-opacity hover:opacity-60 lg:hidden dark:text-neutral-100"
       @click="emit('openMenu')"
     >
@@ -49,11 +63,11 @@ const crumbs = computed(() => {
     </button>
 
     <NuxtLink
-      to="/"
+      :to="localeHref('/')"
       class="flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.15em] text-neutral-900 transition-opacity hover:opacity-60 dark:text-neutral-100"
     >
       <UIcon name="ph:house-bold" class="size-3.5" />
-      home
+      {{ t('nav.home') }}
     </NuxtLink>
 
     <template v-for="(crumb, index) in crumbs" :key="crumb.to">
@@ -61,7 +75,7 @@ const crumbs = computed(() => {
 
       <NuxtLink
         v-if="index < crumbs.length - 1"
-        :to="crumb.to"
+        :to="localeHref(crumb.to)"
         class="shrink-0 font-mono text-[11px] uppercase tracking-[0.15em] text-neutral-900 transition-opacity hover:opacity-60 dark:text-neutral-100"
       >
         {{ crumb.label }}

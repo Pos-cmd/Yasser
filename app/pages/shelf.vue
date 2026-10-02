@@ -1,6 +1,10 @@
 <script setup lang="ts">
-const { data: doc } = await useAsyncData('page-shelf', () =>
-  queryCollection('pages').path('/shelf').first()
+const { t } = useI18n()
+const { contentPath } = useContentLocale()
+
+const { data: doc } = await useAsyncData(
+  () => `page-shelf-${contentPath.value}`,
+  () => queryCollection('pages').path(contentPath.value).first()
 )
 
 if (!doc.value) {
@@ -23,14 +27,6 @@ const kindIcon: Record<string, string> = {
 const SHELF_CAPACITY = 12
 
 const kindOrder = ['manga', 'book', 'film', 'series', 'music']
-
-const kindLabels: Record<string, string> = {
-  manga: 'Manga',
-  book: 'Books',
-  film: 'Films',
-  series: 'Series',
-  music: 'Music'
-}
 
 function chunk<T>(list: T[], size: number): T[][] {
   const rows: T[][] = []
@@ -58,7 +54,7 @@ const shelves = computed(() => {
 
       return {
         kind,
-        label: kindLabels[kind],
+        label: t(`shelf.kinds.${kind}`),
         total: entries.length,
         rows: chunk(entries, SHELF_CAPACITY).map((row, index) => ({
           key: `${kind}-${index}`,
@@ -91,7 +87,7 @@ const shelves = computed(() => {
           <span class="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-75" />
           <span class="relative inline-flex size-2 rounded-full bg-success" />
         </span>
-        Right now
+        {{ t('shelf.rightNow') }}
       </p>
 
       <ul class="grid gap-4 sm:grid-cols-3">
@@ -105,7 +101,7 @@ const shelves = computed(() => {
           <img
             v-if="entry.cover"
             :src="entry.cover"
-            :alt="`Couverture de ${entry.title}`"
+            :alt="t('shelf.coverAlt', { title: entry.title })"
             loading="lazy"
             decoding="async"
             class="h-44 w-full border-b border-dashed border-default bg-elevated object-contain p-2"
@@ -119,7 +115,7 @@ const shelves = computed(() => {
               {{ entry.title }}
             </p>
             <p class="mt-0.5 text-[11px] text-dimmed">
-              {{ [entry.creator, entry.volume ? `Vol. ${entry.volume}` : null].filter(Boolean).join(' · ') }}
+              {{ [entry.creator, entry.volume ? `${t('shelf.volume')} ${entry.volume}` : null].filter(Boolean).join(' · ') }}
             </p>
             <p class="mt-2 text-xs text-muted">
               {{ entry.note }}

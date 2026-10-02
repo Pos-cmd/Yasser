@@ -11,6 +11,8 @@ interface ShelfEntry {
 
 const { entry } = defineProps<{ entry: ShelfEntry }>()
 
+const { t } = useI18n()
+
 const open = ref(false)
 
 // Teinte propre a chaque livre : c'est ce qui donne l'effet "rangee de
@@ -19,19 +21,13 @@ const spineStyle = computed(() => ({
   '--spine-h': useHue(`${entry.kind}-${entry.title}`).h1
 }))
 
-const kindLabel: Record<string, string> = {
-  manga: 'Manga',
-  book: 'Book',
-  film: 'Film',
-  music: 'Music',
-  series: 'Series'
-}
+const kindLabel = (kind: string) => t(`shelf.kindsSingular.${kind}`)
 
 const meta = computed(() =>
   [
-    kindLabel[entry.kind],
+    kindLabel(entry.kind),
     entry.creator,
-    entry.volume ? `Vol. ${entry.volume}` : null
+    entry.volume ? `${t('shelf.volume')} ${entry.volume}` : null
   ].filter(Boolean).join(' · ')
 )
 </script>
@@ -53,7 +49,7 @@ const meta = computed(() =>
       <span class="shelf-book__spine">
         <span class="shelf-book__label">{{ entry.title }}</span>
         <span class="shelf-book__mark">
-          {{ entry.volume ?? kindLabel[entry.kind]?.charAt(0) }}
+          {{ entry.volume ?? kindLabel(entry.kind)?.charAt(0) }}
         </span>
       </span>
 

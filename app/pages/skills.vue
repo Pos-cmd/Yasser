@@ -1,6 +1,9 @@
 <script setup lang="ts">
-const { data: doc } = await useAsyncData('page-skills', () =>
-  queryCollection('pages').path('/skills').first()
+const { contentPath } = useContentLocale()
+
+const { data: doc } = await useAsyncData(
+  () => `page-skills-${contentPath.value}`,
+  () => queryCollection('pages').path(contentPath.value).first()
 )
 
 if (!doc.value) {

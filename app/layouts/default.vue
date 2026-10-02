@@ -3,29 +3,31 @@
 <script setup lang="ts">
 import type { NavItem } from '~/types/nav';
 
+const { t } = useI18n()
+const { basePath, localeHref } = useContentLocale()
+
 const socials = [
-  { label: 'X', icon: 'streamline-logos:x-twitter-logo-solid', to: 'https://x.com/' },
-  // { label: 'Instagram', icon: 'streamline-logos:instagram-logo-2-solid', to: 'https://instagram.com/' },
-  { label: 'GitHub', icon: 'ph:github-logo-bold', to: 'https://github.com/' },
+  { label: 'LinkedIn', icon: 'streamline-logos:linkedin-logo-solid', to: 'https://www.linkedin.com/in/yasser-salami-djima-8922ab246' },
+  { label: 'GitHub', icon: 'ph:github-logo-bold', to: 'https://github.com/pos-cmd' },
   { label: 'Mail', icon: 'ph:paper-plane-tilt-bold', to: 'mailto:afolabiyasser06@gmail.com' }
 ]
 
-const facts = [
-  { icon: 'ph:cake-bold', label: '26 year old' },
-  { icon: 'ph:book-open-bold', label: 'I really love to read manga' },
-  // { icon: 'ph:barbell-bold', label: 'I try to workout' },
-  { icon: 'ph:sparkle-bold', label: 'I would love to work on new things' }
-]
+const facts = computed(() => [
+  { icon: 'ph:map-pin-bold', label: t('facts.location') },
+  { icon: 'ph:cake-bold', label: t('facts.age') },
+  { icon: 'ph:code-bold', label: t('facts.stack') },
+  { icon: 'ph:book-open-bold', label: t('facts.manga') }
+])
 
-const sections: NavItem[] = [
-  { label: 'Home', to: '/', icon: 'ph:house-bold' },
-  { label: 'About', to: '/about', icon: 'ph:user-bold' },
-  { label: 'Experience', to: '/experience', icon: 'ph:briefcase-bold' },
-  { label: 'Projects', to: '/projects', icon: 'ph:rocket-bold' },
-  { label: 'Skills', to: '/skills', icon: 'ph:brain-bold' },
-  { label: 'Notes', to: '/notes', icon: 'ph:pencil-simple-bold' },
-  { label: 'Bookmarks', to: '/bookmarks', icon: 'ph:bookmark-simple-bold' }
-]
+const sections = computed<NavItem[]>(() => [
+  { label: t('nav.home'), to: '/', icon: 'ph:house-bold' },
+  { label: t('nav.about'), to: '/about', icon: 'ph:user-bold' },
+  { label: t('nav.experience'), to: '/experience', icon: 'ph:briefcase-bold' },
+  { label: t('nav.projects'), to: '/projects', icon: 'ph:rocket-bold' },
+  { label: t('nav.skills'), to: '/skills', icon: 'ph:brain-bold' },
+  { label: t('nav.notes'), to: '/notes', icon: 'ph:pencil-simple-bold' },
+  { label: t('nav.bookmarks'), to: '/bookmarks', icon: 'ph:bookmark-simple-bold' }
+])
 
 // USidebar partage la MEME prop entre le tiroir mobile et l'effondrement
 // desktop : `open` lit `openMobile` sous 1024px, `modelOpen` au-dessus. Le
@@ -39,10 +41,10 @@ const sections: NavItem[] = [
 // le `desktopOpen` que le composant vient de sauvegarder.
 const sidebarOpen = ref(true)
 
-const route = useRoute()
-
+// `basePath` est le chemin courant prive de son prefixe de locale : les entrees
+// de navigation restent ecrites en clair (`/about`) et non `/fr/about`.
 const isActive = (item: NavItem) =>
-  route.path === item.to || route.path.startsWith(`${item.to}/`)
+  basePath.value === item.to || basePath.value.startsWith(`${item.to}/`)
 </script>
 
 <template>
@@ -59,11 +61,11 @@ const isActive = (item: NavItem) =>
         body: 'gap-6 scrollbar-hidden'
       }"
     >
-      <nav aria-label="Sections" class="lg:hidden">
+      <nav :aria-label="t('aria.sections')" class="lg:hidden">
         <ul class="space-y-0.5">
           <li v-for="item in sections" :key="item.to">
             <NuxtLink
-              :to="item.to"
+              :to="localeHref(item.to)"
               class="flex items-center gap-2.5 px-2 py-2 text-sm transition-colors"
               :class="isActive(item)
                 ? 'bg-elevated font-medium text-primary'
@@ -81,9 +83,10 @@ const isActive = (item: NavItem) =>
 
       <template #header="{ close }">
         <div class="flex w-full items-center justify-between gap-2">
-          <span class="flex items-center gap-2 text-sm font-semibold text-highlighted cursor-pointer">
+          <div class="flex items-center gap-2 text-sm font-semibold text-highlighted">
             <UColorModeButton />
-          </span>
+            <PageLangSwitcher />
+          </div>
           <div class="flex items-center gap-0.5">
         <UButton
           v-for="social in socials"
@@ -108,7 +111,7 @@ const isActive = (item: NavItem) =>
             variant="ghost"
             size="sm"
             square
-            aria-label="Fermer le menu"
+            :aria-label="t('aria.closeMenu')"
             class="lg:hidden"
             @click="close"
           />
@@ -125,7 +128,7 @@ const isActive = (item: NavItem) =>
         </div>
 
         <p class="text-sm leading-relaxed text-muted">
-          An enthusiastic dev who loves to try stuff and build new things — always curious, always shipping.
+          {{ t('sidebar.blurb') }}
         </p>
       </section>
 
@@ -135,7 +138,7 @@ const isActive = (item: NavItem) =>
       <section class="space-y-3">
         <p class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-dimmed">
           <UIcon name="ph:info-bold" class="size-3.5 text-primary" />
-          Some info
+          {{ t('sidebar.someInfo') }}
         </p>
 
         <ul class="space-y-2.5">
@@ -155,14 +158,14 @@ const isActive = (item: NavItem) =>
             <span class="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-75" />
             <span class="relative inline-flex size-2 rounded-full bg-success" />
           </span>
-          I'm active now
+          {{ t('sidebar.activeNow') }}
         </p>
 
         <!-- Github Habit tracker -->
         <div class="rounded-lg border border-dashed border-default px-3 py-4 text-center">
           <UIcon name="ph:github-logo-bold" class="mx-auto size-5 text-dimmed" />
           <p class="mt-1.5 text-xs text-dimmed">
-            GitHub activity — coming soon
+            {{ t('sidebar.githubActivity') }}
           </p>
         </div>
       </section>
