@@ -57,6 +57,16 @@ export default defineNuxtConfig({
     ]
   },
   devtools: { enabled: true },
+  // nuxt-studio exige owner/repo pour un build de production (sinon le module
+  // jette « Repository owner and repository name are required »).
+  studio: {
+    repository: {
+      provider: 'github',
+      owner: 'Pos-cmd',
+      repo: 'Yasser',
+      branch: 'main'
+    }
+  },
   css: ['~/assets/css/main.css'],
   // Alimente par NUXT_TMDB_API_KEY dans .env (jamais commite).
   // Sert uniquement au resolveur de couvertures cote serveur.
