@@ -1,11 +1,11 @@
 ---
 title: I stopped using barrel files
-description: One index.ts re-exporting a folder felt tidy. It was quietly costing me build time and clarity.
 date: 2025-04-19
+description: One index.ts re-exporting a folder felt tidy. It was quietly costing me build time and clarity.
+draft: false
 tags:
   - TypeScript
   - Tooling
-draft: false
 ---
 
 # I stopped using barrel files

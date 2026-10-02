@@ -1,15 +1,17 @@
 ---
-role: Senior Frontend Developer
+title: Senior Frontend Developer at Lumina Studio
 company: Lumina Studio
-companyUrl: "https://example.com"
+companyUrl: https://example.com
+description: I joined a small product team to rebuild a client dashboard that had grown organically for years and was becoming hard to change. My focus was the frontend architecture and the design system that sits underneath it.
 location: Lyon, France
-start: 2023-03-01
+order: 1
+role: Senior Frontend Developer
 stack:
   - Vue 3
   - Nuxt
   - TypeScript
   - Tailwind CSS
-order: 1
+start: 2023-03-01
 ---
 
 # Senior Frontend Developer at Lumina Studio

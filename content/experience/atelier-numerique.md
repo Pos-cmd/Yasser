@@ -1,16 +1,18 @@
 ---
-role: Full-Stack Developer
+title: Full-Stack Developer at Atelier Numérique
 company: Atelier Numérique
-companyUrl: "https://example.com"
-location: Lyon, France
-start: 2021-06-01
+companyUrl: https://example.com
+description: An agency role, which meant a new client every few months and a lot of context switching. I worked across the whole stack, from database schema to the last form validation message.
 end: 2023-02-01
+location: Lyon, France
+order: 2
+role: Full-Stack Developer
 stack:
   - Laravel
   - Vue 3
   - MySQL
   - Inertia.js
-order: 2
+start: 2021-06-01
 ---
 
 # Full-Stack Developer at Atelier Numérique
