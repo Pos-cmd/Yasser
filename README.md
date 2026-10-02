@@ -1,6 +1,19 @@
-# Nuxt Content Starter
+# yas.xyz
 
-Look at the [Nuxt Content documentation](https://content.nuxt.com) to learn more.
+Site personnel bilingue (français / anglais), construit avec Nuxt 4, Nuxt Content, Nuxt UI et `@nuxtjs/i18n`.
+
+## Contenu et langues
+
+Toutes les URLs portent un préfixe de langue explicite — `/fr/...` et `/en/...` — et la racine `/` redirige vers `/fr`.
+
+- Le contenu vit dans **deux dossiers parallèles** : `content/fr/` et `content/en/`. Le chemin d'une page est sa position dans `content/`, donc `content/fr/about.md` répond à `/fr/about`.
+- **Créer une page, c'est la créer dans les deux dossiers.** Une page présente d'un seul côté n'existe que dans une langue.
+- Les textes d'interface (navigation, titres de section, libellés de dates, fil d'Ariane) sont dans `i18n/locales/fr.json` et `i18n/locales/en.json`. Toute chaîne visible ajoutée dans un composant a besoin de sa clé dans les deux fichiers.
+- Les liens internes passent par `useContentLocale().localeHref()` : `@nuxtjs/i18n` ne localise pas `NuxtLink` automatiquement, donc un `to="/about"` rendu tel quel renverrait un 404.
+- `app/app.vue` branche `useLocaleHead()` sur `useHead` : c'est ce qui produit les `<link rel="alternate" hreflang>` et le `lang` de `<html>`. La propriété `language` de chaque locale est obligatoire (elle sert de valeur `hreflang`) et doit rester égale au `code`.
+- `pnpm covers` et `pnpm bookmarks` écrivent dans les deux fichiers de locale ; les métadonnées ne sont résolues qu'une fois.
+
+Check the [Nuxt Content documentation](https://content.nuxt.com) to learn more.
 
 ## Setup
 
