@@ -1,0 +1,105 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "experience": "Experience",
+    "projects": "Projects",
+    "skills": "Skills",
+    "notes": "Notes",
+    "bookmarks": "Bookmarks"
+  },
+  "aria": {
+    "sections": "Sections",
+    "breadcrumb": "Breadcrumb",
+    "sectionNav": "Section navigation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "language": "Change language"
+  },
+  "sidebar": {
+    "blurb": "Full-stack developer based in Lomé, shipping web apps with Vue, Nuxt and Laravel — always curious, always building.",
+    "someInfo": "Some info",
+    "activeNow": "I'm active now",
+    "githubActivity": "GitHub activity — coming soon"
+  },
+  "facts": {
+    "location": "Based in Lomé, Togo",
+    "age": "26 year old",
+    "stack": "Full-stack — Vue, Nuxt & Laravel",
+    "manga": "I really love to read manga"
+  },
+  "home": {
+    "location": "Lomé, Togo",
+    "title1": "I build web things",
+    "title2": "and try to keep them simple.",
+    "intro1": "I'm Yasser, a developer working mostly with Vue, Nuxt and Laravel. I like the part where a vague idea turns into something people actually use — and I like it even more when the code underneath is still readable a year later.",
+    "intro2Before": "This place keeps the professional side and the rest of it together. Start with",
+    "linkAbout": "about",
+    "intro2Middle": "if you want the longer version, or go straight to",
+    "linkProjects": "projects",
+    "intro2After": ".",
+    "latestNotes": "Latest notes",
+    "allNotes": "All notes"
+  },
+  "experience": {
+    "title": "Experience",
+    "description": "Where I've worked, what I was responsible for, and what I took away from it.",
+    "present": "Present"
+  },
+  "projects": {
+    "title": "Projects",
+    "description": "Things I've built, mostly for myself, occasionally for other people.",
+    "previewAlt": "Preview of {title}"
+  },
+  "notes": {
+    "title": "Notes",
+    "description": "Small things I had to work out, written down so I don't have to work them out twice.",
+    "allTags": "All tags"
+  },
+  "shelf": {
+    "rightNow": "Right now",
+    "coverAlt": "Cover of {title}",
+    "volume": "Vol.",
+    "kinds": {
+      "manga": "Manga",
+      "book": "Books",
+      "film": "Films",
+      "series": "Series",
+      "music": "Music"
+    },
+    "kindsSingular": {
+      "manga": "Manga",
+      "book": "Book",
+      "film": "Film",
+      "series": "Series",
+      "music": "Music"
+    }
+  },
+  "date": {
+    "monthYear": "{month} {year}",
+    "full": "{month} {day}, {year}",
+    "present": "Present"
+  },
+  "crumbs": {
+    "about": "About",
+    "shelf": "Shelf",
+    "experience": "Experience",
+    "projects": "Projects",
+    "skills": "Skills",
+    "notes": "Notes",
+    "bookmarks": "Bookmarks",
+    "jobprofils": "JobProfils",
+    "edpage": "EdPage",
+    "golven-studio": "Golven Studio",
+    "faktur": "Faktur",
+    "manga-shelf": "Manga Shelf",
+    "yas-xyz": "yas.xyz",
+    "barrel-files": "Barrel files",
+    "nuxt-content-collections": "Nuxt Content collections",
+    "tailwind-v4-theme-tokens": "Tailwind v4 theme tokens"
+  },
+  "seo": {
+    "homeTitle": "Yasser — Full-Stack Developer",
+    "homeDescription": "Full-stack developer based in Lomé, Togo, building web applications with Vue, Nuxt, Laravel and TypeScript."
+  }
+}

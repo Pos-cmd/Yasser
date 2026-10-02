@@ -1,5 +1,13 @@
 import { defineCollection, defineContentConfig, z } from '@nuxt/content'
 
+// Le site existe en deux langues, chacune dans son dossier : le chemin d'une
+// page est sa position dans `content/`, donc `content/fr/about.md` repond a
+// `/fr/about` sans qu'on ait besoin de l'option `prefix`.
+const LOCALES = ['fr', 'en'] as const
+
+const byLocale = (pattern: string) =>
+  LOCALES.map(locale => ({ include: `${locale}/${pattern}` }))
+
 const shelfItem = z.object({
   title: z.string(),
   kind: z.enum(['manga', 'book', 'film', 'music', 'series']),
@@ -36,10 +44,10 @@ const pageGroup = z.object({
 
 export default defineContentConfig({
   collections: {
-    // Pages racines : about.md, skills.md, bookmarks.md, shelf.md
+    // Pages racines : <locale>/about.md, <locale>/skills.md, etc.
     pages: defineCollection({
       type: 'page',
-      source: '*.md',
+      source: byLocale('*.md'),
       schema: z.object({
         title: z.string(),
         description: z.string().optional(),
@@ -50,7 +58,7 @@ export default defineContentConfig({
     }),
     experience: defineCollection({
       type: 'page',
-      source: 'experience/**/*.md',
+      source: byLocale('experience/**/*.md'),
       schema: z.object({
         role: z.string(),
         company: z.string(),
@@ -64,7 +72,7 @@ export default defineContentConfig({
     }),
     projects: defineCollection({
       type: 'page',
-      source: 'projects/**/*.md',
+      source: byLocale('projects/**/*.md'),
       schema: z.object({
         title: z.string(),
         description: z.string(),
@@ -79,7 +87,7 @@ export default defineContentConfig({
     }),
     notes: defineCollection({
       type: 'page',
-      source: 'notes/**/*.md',
+      source: byLocale('notes/**/*.md'),
       schema: z.object({
         title: z.string(),
         description: z.string(),

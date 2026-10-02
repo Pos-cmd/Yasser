@@ -7,7 +7,7 @@ stack:
   - Nuxt Content
   - Nuxt UI
   - Tailwind CSS
-repo: "https://github.com/"
+repo: "https://github.com/Pos-cmd/Yasser"
 order: 3
 ---
 
@@ -25,4 +25,4 @@ My personal site. I rebuild it roughly once a year, which is a habit I have made
 
 Nuxt 4 with Nuxt Content for the writing and Nuxt UI for the primitives, styled with a small set of design tokens. The whole thing builds to static files and is served from an edge network.
 
-[← All projects](/projects)
+[← All projects](/en/projects)

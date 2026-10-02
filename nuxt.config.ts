@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     '@nuxtjs/seo',
     '@nuxt/ui',
     '@nuxtjs/color-mode',
+    '@nuxtjs/i18n',
     'nuxt-studio'
   ],
   vite: {
@@ -57,6 +58,30 @@ export default defineNuxtConfig({
     ]
   },
   devtools: { enabled: true },
+  // Bilingue avec un prefixe explicite sur TOUTES les URLs, y compris la
+  // langue par defaut : /fr/... et /en/....
+  i18n: {
+    baseUrl: 'https://yas.xyz',
+    defaultLocale: 'fr',
+    strategy: 'prefix',
+    locales: [
+      // `language` alimente `<html lang>` ET la valeur des `hreflang` : il est
+      // obligatoire, sinon aucune balise `alternate` n'est produite. On le
+      // laisse egal au code (et non `fr-FR`) : le contenu n'est pas specifique
+      // a un pays, et une valeur differente ferait emettre DEUX alternates par
+      // langue (`fr` en plus de `fr-FR`) vers la meme URL.
+      { code: 'fr', language: 'fr', name: 'Français', file: 'fr.json' },
+      { code: 'en', language: 'en', name: 'English', file: 'en.json' }
+    ],
+    // On ne devine pas la langue du visiteur : la racine doit toujours mener a
+    // la version francaise, le choix se fait ensuite via le selecteur.
+    detectBrowserLanguage: false
+  },
+  // Sans cette regle, « / » n'est la route d'aucune locale en strategie
+  // `prefix` (les routes sont `/fr` et `/en`) et renverrait un 404.
+  routeRules: {
+    '/': { redirect: { to: '/fr', statusCode: 302 } }
+  },
   // nuxt-studio exige owner/repo pour un build de production (sinon le module
   // jette « Repository owner and repository name are required »).
   studio: {

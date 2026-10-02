@@ -7,7 +7,6 @@ stack:
   - Vue 3
   - MySQL
   - Stripe
-url: "https://example.com"
 order: 2
 ---
 
@@ -26,4 +25,4 @@ A tool I built for myself during a stretch of freelance work, then kept improvin
 
 Recurring edge cases beat clever features every time. Clients change currency, addresses and company names mid-project, and none of those are the fun part to build.
 
-[← All projects](/projects)
+[← All projects](/en/projects)

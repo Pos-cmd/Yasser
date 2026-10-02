@@ -22,10 +22,14 @@ groups:
     items:
       - label: Vue 3
         icon: logos:vue
-      - label: Nuxt 3 / 4
+      - label: Nuxt
         icon: logos:nuxt-icon
       - label: Laravel
         icon: logos:laravel
+      - label: AdonisJS
+        icon: logos:adonisjs-icon
+      - label: Pinia
+        icon: logos:pinia
       - label: Node.js
         icon: logos:nodejs-icon
       - label: Tailwind CSS

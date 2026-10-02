@@ -1,0 +1,105 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "about": "À propos",
+    "experience": "Expérience",
+    "projects": "Projets",
+    "skills": "Compétences",
+    "notes": "Notes",
+    "bookmarks": "Signets"
+  },
+  "aria": {
+    "sections": "Sections",
+    "breadcrumb": "Fil d'Ariane",
+    "sectionNav": "Navigation des sections",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "language": "Changer de langue"
+  },
+  "sidebar": {
+    "blurb": "Développeur full-stack basé à Lomé, je construis des applications web avec Vue, Nuxt et Laravel — toujours curieux, toujours en train de fabriquer.",
+    "someInfo": "Quelques infos",
+    "activeNow": "Je suis actif en ce moment",
+    "githubActivity": "Activité GitHub — bientôt disponible"
+  },
+  "facts": {
+    "location": "Basé à Lomé, Togo",
+    "age": "26 ans",
+    "stack": "Full-stack — Vue, Nuxt & Laravel",
+    "manga": "J'adore lire des mangas"
+  },
+  "home": {
+    "location": "Lomé, Togo",
+    "title1": "Je construis des choses pour le web",
+    "title2": "et j'essaie de les garder simples.",
+    "intro1": "Je m'appelle Yasser, développeur, principalement sur Vue, Nuxt et Laravel. Ce que je préfère, c'est le moment où une idée floue devient quelque chose que les gens utilisent vraiment — et encore plus quand le code en dessous reste lisible un an plus tard.",
+    "intro2Before": "Cet endroit rassemble le côté professionnel et le reste. Commence par",
+    "linkAbout": "à propos",
+    "intro2Middle": "si tu veux la version longue, ou va directement aux",
+    "linkProjects": "projets",
+    "intro2After": ".",
+    "latestNotes": "Dernières notes",
+    "allNotes": "Toutes les notes"
+  },
+  "experience": {
+    "title": "Expérience",
+    "description": "Où j'ai travaillé, de quoi j'étais responsable, et ce que j'en ai retenu.",
+    "present": "Aujourd'hui"
+  },
+  "projects": {
+    "title": "Projets",
+    "description": "Des choses que j'ai construites, surtout pour moi, parfois pour d'autres.",
+    "previewAlt": "Aperçu de {title}"
+  },
+  "notes": {
+    "title": "Notes",
+    "description": "Des petits problèmes que j'ai dû résoudre, notés une fois pour ne pas avoir à les résoudre deux fois.",
+    "allTags": "Toutes les étiquettes"
+  },
+  "shelf": {
+    "rightNow": "En ce moment",
+    "coverAlt": "Couverture de {title}",
+    "volume": "Tome",
+    "kinds": {
+      "manga": "Mangas",
+      "book": "Livres",
+      "film": "Films",
+      "series": "Séries",
+      "music": "Musique"
+    },
+    "kindsSingular": {
+      "manga": "Manga",
+      "book": "Livre",
+      "film": "Film",
+      "series": "Série",
+      "music": "Musique"
+    }
+  },
+  "date": {
+    "monthYear": "{month} {year}",
+    "full": "{day} {month} {year}",
+    "present": "Aujourd'hui"
+  },
+  "crumbs": {
+    "about": "À propos",
+    "shelf": "Étagère",
+    "experience": "Expérience",
+    "projects": "Projets",
+    "skills": "Compétences",
+    "notes": "Notes",
+    "bookmarks": "Signets",
+    "jobprofils": "JobProfils",
+    "edpage": "EdPage",
+    "golven-studio": "Golven Studio",
+    "faktur": "Faktur",
+    "manga-shelf": "Manga Shelf",
+    "yas-xyz": "yas.xyz",
+    "barrel-files": "Barrel files",
+    "nuxt-content-collections": "Collections Nuxt Content",
+    "tailwind-v4-theme-tokens": "Tokens Tailwind v4"
+  },
+  "seo": {
+    "homeTitle": "Yasser — Développeur Full-Stack",
+    "homeDescription": "Développeur full-stack basé à Lomé, au Togo, je construis des applications web avec Vue, Nuxt, Laravel et TypeScript."
+  }
+}

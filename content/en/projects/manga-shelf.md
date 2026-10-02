@@ -7,7 +7,6 @@ stack:
   - SQLite
   - Drizzle
   - Tailwind CSS
-repo: "https://github.com/"
 featured: true
 order: 1
 ---
@@ -26,4 +25,4 @@ I read a lot of manga and I kept losing track of which volumes I owned and where
 
 I started with the database schema and treated the UI as an afterthought. If I rebuilt it, I'd sketch the reading screen first — the data model ended up being the easy part anyway.
 
-[← All projects](/projects)
+[← All projects](/en/projects)
