@@ -1,19 +1,25 @@
 /**
- * Resout les couvertures du shelf et les ecrit dans content/shelf.md.
+ * Resout les couvertures du shelf et les ecrit dans content/<locale>/shelf.md.
  *
  *   node scripts/resolve-covers.mjs          # ne remplit que les manquantes
  *   node scripts/resolve-covers.mjs --force  # re-resout tout
  *
- * Le script patche le fichier ligne a ligne (il n'ecrit que des lignes
+ * Le script patche les fichiers ligne a ligne (il n'ecrit que des lignes
  * `cover:`) plutot que de re-serialiser le YAML : pas de reformatage
  * sauvage du frontmatter, pas de dependance a un parseur.
+ *
+ * Chaque langue a sa copie du shelf ; les deux sont patchees avec les memes
+ * couvertures (resolues une seule fois).
  */
 import { readFile, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-const SHELF = join(root, 'content', 'shelf.md')
+// Le shelf existe en une copie par langue : les couvertures sont identiques,
+// seules les notes changent. On ne resout donc qu'une fois par oeuvre.
+const LOCALES = ['fr', 'en']
+const shelfFile = locale => join(root, 'content', locale, 'shelf.md')
 const force = process.argv.includes('--force')
 
 // ---------------------------------------------------------------- env
@@ -126,11 +132,8 @@ async function resolveCover(kind, title, volume = null) {
 
 // ---------------------------------------------------------------- parse
 
-const raw = await readFile(SHELF, 'utf8')
-const lines = raw.split('\n')
-
 /** Une entree commence par "  - title: X" ; elle court jusqu'a la suivante. */
-function findEntries() {
+function findEntries(lines) {
   const found = []
 
   for (let i = 0; i < lines.length; i++) {
@@ -166,80 +169,103 @@ function findEntries() {
 
 await loadEnv()
 
-const entries = findEntries()
-const patches = []
+// Une seule resolution par oeuvre : les deux fichiers decrivent exactement
+// les memes titres, seule la note traduite change.
+const coverCache = new Map()
 
-console.log(`\n${entries.length} entrees trouvees dans content/shelf.md\n`)
+async function resolveCoverOnce(kind, title, volume) {
+  const key = `${kind}|${title}|${volume ?? ''}`
+  const hit = coverCache.has(key)
 
-for (const entry of entries) {
-  // Index absolu d'une ligne `cover:` deja presente pour cette entree.
-  let coverIndex = -1
-  for (let i = entry.start + 1; i <= entry.end; i++) {
-    if (/^\s+cover:/.test(lines[i])) {
-      coverIndex = i
-      break
+  if (!hit) {
+    coverCache.set(key, await resolveCover(kind, title, volume))
+
+    // Petite pause pour ne pas se faire rate-limiter par Kitsu / Open Library.
+    await new Promise(done => setTimeout(done, 400))
+  }
+
+  return coverCache.get(key)
+}
+
+async function processShelf(locale) {
+  const file = shelfFile(locale)
+  const lines = (await readFile(file, 'utf8')).split('\n')
+  const entries = findEntries(lines)
+  const patches = []
+
+  console.log(`\n${entries.length} entrees trouvees dans content/${locale}/shelf.md\n`)
+
+  for (const entry of entries) {
+    // Index absolu d'une ligne `cover:` deja presente pour cette entree.
+    let coverIndex = -1
+    for (let i = entry.start + 1; i <= entry.end; i++) {
+      if (/^\s+cover:/.test(lines[i])) {
+        coverIndex = i
+        break
+      }
     }
-  }
 
-  if (coverIndex > -1 && !force) {
-    console.log(`  = ${entry.title} — deja une couverture`)
-    continue
-  }
-
-  if (!entry.kind) {
-    console.log(`  ! ${entry.title} — pas de champ kind, ignore`)
-    continue
-  }
-
-  try {
-    const cover = await resolveCover(entry.kind, entry.title, entry.volume)
-
-    if (!cover) {
-      console.log(`  x ${entry.title} — aucune couverture trouvee`)
+    if (coverIndex > -1 && !force) {
+      console.log(`  = ${entry.title} — deja une couverture`)
       continue
     }
 
-    const text = `${entry.indent}  cover: "${cover}"`
-
-    if (coverIndex > -1) {
-      patches.push({ type: 'replace', index: coverIndex, text })
+    if (!entry.kind) {
+      console.log(`  ! ${entry.title} — pas de champ kind, ignore`)
+      continue
     }
-    else {
-      let kindIndex = -1
-      for (let i = entry.start + 1; i <= entry.end; i++) {
-        if (/^\s+kind:/.test(lines[i])) {
-          kindIndex = i
-          break
-        }
+
+    try {
+      const cover = await resolveCoverOnce(entry.kind, entry.title, entry.volume)
+
+      if (!cover) {
+        console.log(`  x ${entry.title} — aucune couverture trouvee`)
+        continue
       }
 
-      patches.push({
-        type: 'insert',
-        index: (kindIndex > -1 ? kindIndex : entry.start) + 1,
-        text
-      })
+      const text = `${entry.indent}  cover: "${cover}"`
+
+      if (coverIndex > -1) {
+        patches.push({ type: 'replace', index: coverIndex, text })
+      }
+      else {
+        let kindIndex = -1
+        for (let i = entry.start + 1; i <= entry.end; i++) {
+          if (/^\s+kind:/.test(lines[i])) {
+            kindIndex = i
+            break
+          }
+        }
+
+        patches.push({
+          type: 'insert',
+          index: (kindIndex > -1 ? kindIndex : entry.start) + 1,
+          text
+        })
+      }
+
+      console.log(`  + ${entry.title} (${entry.kind}${entry.volume ? ` vol. ${entry.volume}` : ''})`)
     }
-
-    console.log(`  + ${entry.title} (${entry.kind}${entry.volume ? ` vol. ${entry.volume}` : ''})`)
-  }
-  catch (error) {
-    console.log(`  x ${entry.title} — ${error.message}`)
+    catch (error) {
+      console.log(`  x ${entry.title} — ${error.message}`)
+    }
   }
 
-  // Petite pause pour ne pas se faire rate-limiter par Kitsu / Open Library.
-  await new Promise(done => setTimeout(done, 400))
+  // Ordre inverse : les index des patchs suivants restent valides.
+  for (const patch of patches.sort((a, b) => b.index - a.index)) {
+    if (patch.type === 'replace') {
+      lines[patch.index] = patch.text
+    }
+    else {
+      lines.splice(patch.index, 0, patch.text)
+    }
+  }
+
+  await writeFile(file, lines.join('\n'), 'utf8')
+
+  console.log(`\n${patches.length} couverture(s) ecrite(s) dans content/${locale}/shelf.md\n`)
 }
 
-// Ordre inverse : les index des patchs suivants restent valides.
-for (const patch of patches.sort((a, b) => b.index - a.index)) {
-  if (patch.type === 'replace') {
-    lines[patch.index] = patch.text
-  }
-  else {
-    lines.splice(patch.index, 0, patch.text)
-  }
+for (const locale of LOCALES) {
+  await processShelf(locale)
 }
-
-await writeFile(SHELF, lines.join('\n'), 'utf8')
-
-console.log(`\n${patches.length} couverture(s) ecrite(s) dans content/shelf.md\n`)

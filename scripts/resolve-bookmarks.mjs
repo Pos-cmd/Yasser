@@ -1,5 +1,5 @@
 /**
- * Resout les apercus des liens de content/bookmarks.md.
+ * Resout les apercus des liens de content/<locale>/bookmarks.md.
  *
  *   node scripts/resolve-bookmarks.mjs          # ne traite que les liens sans titre
  *   node scripts/resolve-bookmarks.mjs --force  # re-resout tout
@@ -8,16 +8,20 @@
  *   1. parseur Open Graph maison (aucune dependance, aucune limite d'appels)
  *   2. repli sur l'API microlink si le parseur ne trouve rien
  *
- * Le script patche le fichier ligne a ligne (il n'ecrit que des lignes de
- * metadonnees) plutot que de re-serialiser le YAML : ton frontmatter et tes
+ * Le script patche les fichiers ligne a ligne (il n'ecrit que des lignes de
+ * metadonnees) plutot que de re-serialiser le YAML : frontmatter et
  * commentaires restent intacts.
+ *
+ * Chaque langue a sa copie de la liste ; les metadonnees sont resolues une
+ * seule fois puis ecrites dans les deux.
  */
 import { readFile, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-const FILE = join(root, 'content', 'bookmarks.md')
+const LOCALES = ['fr', 'en']
+const bookmarksFile = locale => join(root, 'content', locale, 'bookmarks.md')
 const force = process.argv.includes('--force')
 
 // Les cles qu'on ecrit, dans l'ordre d'affichage dans le fichier.
@@ -196,15 +200,12 @@ async function resolve(url) {
 const yamlString = (value) =>
   `"${String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`
 
-const raw = await readFile(FILE, 'utf8')
-const lines = raw.split('\n')
-
 /**
  * Une entree de lien = "- label: X" suivi d'un "url:". Les en-tetes de groupe
  * ("- label: Documentation") matchent aussi le motif, mais n'ont pas d'url :
  * ils sont donc ecartes naturellement.
  */
-function findEntries() {
+function findEntries(lines) {
   const found = []
 
   for (let i = 0; i < lines.length; i++) {
@@ -239,71 +240,90 @@ function findEntries() {
 
 // -------------------------------------------------------------------- run
 
-const entries = findEntries()
-const patches = []
+// Une seule resolution par URL : les deux fichiers listent les memes liens,
+// seules les notes traduites changent.
+const metaCache = new Map()
 
-console.log(`\n${entries.length} liens trouves dans content/bookmarks.md\n`)
+async function resolveOnce(url) {
+  if (!metaCache.has(url)) {
+    metaCache.set(url, await resolve(url))
 
-for (const entry of entries) {
-  const already = lines
-    .slice(entry.urlIndex + 1, entry.end + 1)
-    .some(line => /^\s+title:/.test(line))
-
-  if (already && !force) {
-    console.log(`  = ${entry.label} — deja resolu`)
-    continue
+    // On reste courtois avec les sites qu'on interroge.
+    await new Promise(done => setTimeout(done, 300))
   }
 
-  const data = await resolve(entry.url)
+  return metaCache.get(url)
+}
 
-  if (!data) {
-    console.log(`  x ${entry.label} — rien trouve`)
-    continue
+async function processBookmarks(locale) {
+  const lines = (await readFile(bookmarksFile(locale), 'utf8')).split('\n')
+  const entries = findEntries(lines)
+  const patches = []
+
+  console.log(`\n${entries.length} liens trouves dans content/${locale}/bookmarks.md\n`)
+
+  for (const entry of entries) {
+    const already = lines
+      .slice(entry.urlIndex + 1, entry.end + 1)
+      .some(line => /^\s+title:/.test(line))
+
+    if (already && !force) {
+      console.log(`  = ${entry.label} — deja resolu`)
+      continue
+    }
+
+    const data = await resolveOnce(entry.url)
+
+    if (!data) {
+      console.log(`  x ${entry.label} — rien trouve`)
+      continue
+    }
+
+    const values = {
+      title: data.title?.slice(0, 120),
+      // Les descriptions trop courtes ("Nuxt", "Home") n'apportent rien.
+      description: data.description?.length > 15 ? data.description.slice(0, 220) : null,
+      image: data.image,
+      site: data.site
+    }
+
+    if (values.image && !(await isImage(values.image))) {
+      console.log(`    (image ecartee, ce n'est pas une image : ${values.image})`)
+      values.image = null
+    }
+
+    const block = KEYS
+      .filter(key => values[key])
+      .map(key => `${entry.indent}  ${key}: ${yamlString(values[key])}`)
+      .join('\n')
+
+    // On supprime les anciennes valeurs de ces cles avant de reinserer.
+    for (let i = entry.end; i > entry.urlIndex; i--) {
+      if (KEYS.some(key => new RegExp(`^\\s+${key}:`).test(lines[i]))) {
+        patches.push({ type: 'delete', index: i })
+      }
+    }
+
+    patches.push({ type: 'insert', index: entry.urlIndex + 1, text: block })
+
+    console.log(`  + ${entry.label} [${data.source}] ${String(data.title).slice(0, 52)}`)
   }
 
-  const values = {
-    title: data.title?.slice(0, 120),
-    // Les descriptions trop courtes ("Nuxt", "Home") n'apportent rien.
-    description: data.description?.length > 15 ? data.description.slice(0, 220) : null,
-    image: data.image,
-    site: data.site
-  }
-
-  if (values.image && !(await isImage(values.image))) {
-    console.log(`    (image ecartee, ce n'est pas une image : ${values.image})`)
-    values.image = null
-  }
-
-  const block = KEYS
-    .filter(key => values[key])
-    .map(key => `${entry.indent}  ${key}: ${yamlString(values[key])}`)
-    .join('\n')
-
-  // On supprime les anciennes valeurs de ces cles avant de reinserer.
-  for (let i = entry.end; i > entry.urlIndex; i--) {
-    if (KEYS.some(key => new RegExp(`^\\s+${key}:`).test(lines[i]))) {
-      patches.push({ type: 'delete', index: i })
+  // Ordre decroissant : les index des patchs suivants restent valides.
+  for (const patch of patches.sort((a, b) => b.index - a.index)) {
+    if (patch.type === 'delete') {
+      lines.splice(patch.index, 1)
+    }
+    else {
+      lines.splice(patch.index, 0, patch.text)
     }
   }
 
-  patches.push({ type: 'insert', index: entry.urlIndex + 1, text: block })
+  await writeFile(bookmarksFile(locale), lines.join('\n'), 'utf8')
 
-  console.log(`  + ${entry.label} [${data.source}] ${String(data.title).slice(0, 52)}`)
-
-  // On reste courtois avec les sites qu'on interroge.
-  await new Promise(done => setTimeout(done, 300))
+  console.log(`\n${patches.filter(p => p.type === 'insert').length} lien(s) enrichi(s) dans content/${locale}/bookmarks.md\n`)
 }
 
-// Ordre decroissant : les index des patchs suivants restent valides.
-for (const patch of patches.sort((a, b) => b.index - a.index)) {
-  if (patch.type === 'delete') {
-    lines.splice(patch.index, 1)
-  }
-  else {
-    lines.splice(patch.index, 0, patch.text)
-  }
+for (const locale of LOCALES) {
+  await processBookmarks(locale)
 }
-
-await writeFile(FILE, lines.join('\n'), 'utf8')
-
-console.log(`\n${patches.filter(p => p.type === 'insert').length} lien(s) enrichi(s)\n`)
