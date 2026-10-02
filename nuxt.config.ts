@@ -67,6 +67,15 @@ export default defineNuxtConfig({
       branch: 'main'
     }
   },
+  // @nuxtjs/seo : sans ces valeurs, le gabarit de titre rend un « %siteName »
+  // litteral dans l'onglet. `url` sert aussi de base aux URLs canoniques.
+  site: {
+    url: 'https://yas.xyz',
+    name: 'yas.xyz',
+    description: 'Full-stack developer based in Lomé, Togo, building web applications with Vue, Nuxt, Laravel and TypeScript.',
+    defaultLocale: 'fr',
+    indexable: true
+  },
   css: ['~/assets/css/main.css'],
   // Alimente par NUXT_TMDB_API_KEY dans .env (jamais commite).
   // Sert uniquement au resolveur de couvertures cote serveur.
