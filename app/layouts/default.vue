@@ -152,7 +152,7 @@ const isActive = (item: NavItem) =>
       <USeparator type="dashed" />
 
       <!-- Currently active -->
-      <section class="space-y-3">
+      <section v-if="false" class="space-y-3">
         <p class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-dimmed">
           <span class="relative flex size-2">
             <span class="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-75" />
@@ -160,10 +160,6 @@ const isActive = (item: NavItem) =>
           </span>
           {{ t('sidebar.activeNow') }}
         </p>
-
-        <!-- Activite GitHub : damier + chiffres cles. Repli automatique sur une
-             carte d'attente si aucun jeton n'est configure ou si GitHub ne
-             repond pas (voir server/api/github-activity.get.ts). -->
         <SidebarGithubActivity />
       </section>
     </USidebar>

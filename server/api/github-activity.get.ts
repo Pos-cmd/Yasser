@@ -96,7 +96,7 @@ function computeStreaks(days: ContributionDay[]) {
   // la serie, la journee n'est simplement pas terminee.
   let current = 0
   for (let i = days.length - 1; i >= 0; i--) {
-    if (days[i].contributionCount > 0) {
+    if (days[i] && days[i].contributionCount > 0) {
       current += 1
     }
     else if (i < days.length - 1) {
