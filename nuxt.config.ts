@@ -105,7 +105,15 @@ export default defineNuxtConfig({
   // Alimente par NUXT_TMDB_API_KEY dans .env (jamais commite).
   // Sert uniquement au resolveur de couvertures cote serveur.
   runtimeConfig: {
-    tmdbApiKey: ''
+    tmdbApiKey: '',
+    // Jeton GitHub (PAT classique, scope `read:user`) alimente par
+    // NUXT_GITHUB_TOKEN dans .env. Prive : seul le handler Nitro de
+    // /api/github-activity le lit, il ne doit jamais partir au navigateur.
+    githubToken: '',
+    public: {
+      // Le pseudo n'est pas un secret et sert a construire le lien du widget.
+      githubUser: 'pos-cmd'
+    }
   },
   compatibilityDate: '2024-04-03',
   ui: {

@@ -20,7 +20,15 @@
     "blurb": "Développeur full-stack basé à Lomé, je construis des applications web avec Vue, Nuxt et Laravel — toujours curieux, toujours en train de fabriquer.",
     "someInfo": "Quelques infos",
     "activeNow": "Je suis actif en ce moment",
-    "githubActivity": "Activité GitHub — bientôt disponible"
+    "githubActivity": "Activité GitHub",
+    "githubUnavailable": "Bientôt disponible",
+    "githubContributions": "{count} contribution | {count} contributions",
+    "githubLast12Months": "sur les 12 derniers mois",
+    "githubCurrentStreak": "Série",
+    "githubLongestStreak": "Record",
+    "githubPublicRepos": "{count} dépôt public | {count} dépôts publics",
+    "githubDays": "{count} jour | {count} jours",
+    "githubOpenProfile": "Voir le profil GitHub"
   },
   "facts": {
     "location": "Basé à Lomé, Togo",

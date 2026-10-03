@@ -161,13 +161,10 @@ const isActive = (item: NavItem) =>
           {{ t('sidebar.activeNow') }}
         </p>
 
-        <!-- Github Habit tracker -->
-        <div class="rounded-lg border border-dashed border-default px-3 py-4 text-center">
-          <UIcon name="ph:github-logo-bold" class="mx-auto size-5 text-dimmed" />
-          <p class="mt-1.5 text-xs text-dimmed">
-            {{ t('sidebar.githubActivity') }}
-          </p>
-        </div>
+        <!-- Activite GitHub : damier + chiffres cles. Repli automatique sur une
+             carte d'attente si aucun jeton n'est configure ou si GitHub ne
+             repond pas (voir server/api/github-activity.get.ts). -->
+        <SidebarGithubActivity />
       </section>
     </USidebar>
 
