@@ -61,8 +61,9 @@
   },
   "notes": {
     "title": "Notes",
-    "description": "Small things I had to work out, written down so I don't have to work them out twice.",
-    "allTags": "All tags"
+    "description": "How I work: architecture, technical choices, and the problems that cost me time.",
+    "allTags": "All tags",
+    "empty": "No notes yet."
   },
   "shelf": {
     "rightNow": "Right now",
@@ -101,10 +102,7 @@
     "golven-studio": "Golven Studio",
     "faktur": "Faktur",
     "manga-shelf": "Manga Shelf",
-    "yas-xyz": "yas.xyz",
-    "barrel-files": "Barrel files",
-    "nuxt-content-collections": "Nuxt Content collections",
-    "tailwind-v4-theme-tokens": "Tailwind v4 theme tokens"
+    "yas-xyz": "yas.xyz"
   },
   "seo": {
     "homeTitle": "Yasser — Full-Stack Developer",

@@ -26,12 +26,15 @@ const notes = computed(() =>
       </p>
     </header>
 
-    <ul class="mt-12">
+    <p v-if="!notes.length" class="mt-12 text-muted">
+      {{ t('notes.empty') }}
+    </p>
+
+    <ul v-else class="mt-12">
       <li v-for="note in notes" :key="note.path">
         <NuxtLink
           :to="localeHref(note.path)"
           class="group block border-b border-dashed border-default py-6"
-        >
         >
           <p class="font-mono text-xs text-dimmed">
             {{ fullDate(note.date) }}
