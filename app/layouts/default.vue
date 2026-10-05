@@ -130,6 +130,18 @@ const isActive = (item: NavItem) =>
         <p class="text-sm leading-relaxed text-muted">
           {{ t('sidebar.blurb') }}
         </p>
+
+        <!-- Un <a> et non un NuxtLink : `/Yasser-CV.pdf` n'est pas une route,
+             NuxtLink l'enverrait sur la page attrape-tout `[...slug].vue`.
+             `download` (meme origine) declenche le telechargement. -->
+        <a
+          href="/Yasser-CV.pdf"
+          download
+          class="flex w-full items-center justify-center gap-2 border border-dashed border-default px-3 py-2 text-sm text-toned transition-colors hover:border-primary/50 hover:text-highlighted"
+        >
+          <UIcon name="ph:file-pdf-bold" class="size-4 shrink-0" />
+          {{ t('sidebar.downloadCv') }}
+        </a>
       </section>
 
       <USeparator type="dashed" />

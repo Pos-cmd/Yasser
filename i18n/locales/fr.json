@@ -28,7 +28,8 @@
     "githubLongestStreak": "Record",
     "githubPublicRepos": "{count} dépôt public | {count} dépôts publics",
     "githubDays": "{count} jour | {count} jours",
-    "githubOpenProfile": "Voir le profil GitHub"
+    "githubOpenProfile": "Voir le profil GitHub",
+    "downloadCv": "Télécharger le CV"
   },
   "facts": {
     "location": "Basé à Lomé, Togo",
