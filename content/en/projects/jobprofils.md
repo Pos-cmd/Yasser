@@ -13,7 +13,7 @@ featured: true
 order: 1
 ---
 
-# JobProfils
+# [JobProfils](https://jobprofils.com)
 
 An interview says far more than a CV: how someone explains, listens and qualifies what they claim. None of it survives the end of the conversation, and the next candidate starts from zero. JobProfils lets recruiters record the soft skills they observed during an interview, then surfaces them on the candidate's profile — observed in a real situation rather than self-declared.
 
