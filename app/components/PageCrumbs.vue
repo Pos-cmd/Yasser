@@ -4,8 +4,8 @@ const emit = defineEmits<{ openMenu: [] }>()
 const { t, te } = useI18n()
 const { basePath, localeHref } = useContentLocale()
 
-// Repli lisible pour un segment sans entree dans `crumbs` : `manga-shelf`
-// devient `manga shelf`.
+// Repli lisible pour un segment sans entree dans `crumbs` : `golven-studio`
+// devient `golven studio`.
 function formatSegment(segment: string) {
   return segment.replace(/-/g, ' ')
 }
