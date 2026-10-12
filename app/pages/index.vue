@@ -36,9 +36,9 @@ const latest = computed(() =>
 
     <p class="mt-4 max-w-prose text-base leading-relaxed text-toned">
       {{ t('home.intro2Before') }}
-      <NuxtLink :to="localeHref('/about')" class="text-highlighted underline decoration-dashed underline-offset-4 transition-colors hover:text-primary">{{ t('home.linkAbout') }}</NuxtLink>
+      <NuxtLink :to="localeHref('/about')" class="link-dashed">{{ t('home.linkAbout') }}</NuxtLink>
       {{ t('home.intro2Middle') }}
-      <NuxtLink :to="localeHref('/projects')" class="text-highlighted underline decoration-dashed underline-offset-4 transition-colors hover:text-primary">{{ t('home.linkProjects') }}</NuxtLink>{{ t('home.intro2After') }}
+      <NuxtLink :to="localeHref('/projects')" class="link-dashed">{{ t('home.linkProjects') }}</NuxtLink>{{ t('home.intro2After') }}
     </p>
 
     <section v-if="latest.length" class="mt-20">

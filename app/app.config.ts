@@ -48,6 +48,15 @@ export default defineAppConfig({
       tip: 'i-ri-lightbulb-line',
       upload: 'i-ri-upload-2-line',
       warning: 'i-ri-alert-line'
+    },
+    // Tous les liens markdown partagent le style `link-dashed`, defini une
+    // seule fois dans app/assets/css/main.css. La fonction *remplace* la base
+    // par defaut de Nuxt UI — qui ajoute une bordure pleine au survol — au lieu
+    // de s'y ajouter.
+    prose: {
+      a: {
+        base: () => 'link-dashed'
+      }
     }
   }
 })

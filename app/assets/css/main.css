@@ -40,3 +40,13 @@
     display: none;              /* WebKit / Blink */
   }
 }
+
+/* Style unique des liens : defini ici une seule fois, puis reference par le
+   theme `prose.a` de Nuxt UI (app.config.ts) et par les composants. */
+@utility link-dashed {
+  @apply text-highlighted underline decoration-dashed underline-offset-4 transition-colors;
+
+  &:hover {
+    @apply text-primary;
+  }
+}
